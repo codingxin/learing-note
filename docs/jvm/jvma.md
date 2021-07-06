@@ -47,7 +47,7 @@
 **查看字节码** 
 
 `javac hello.java` 得到hello.class </br>
-`javap hello.java` 得到字节码文件  javap -v 展示详细信息
+`javap hello.class` 得到字节码文件  javap -v 展示详细信息
 
 **字节码运行结构**
  JVM 是一台基于栈的计算机器。每个线程都有一个独属于自己的线程栈（JVM Stack），用于存储栈帧（Frame）。每一次方法调用，JVM 都会自动创建一个栈帧。栈帧由操作数栈， 局部变量数组以及一个 Class 引用组成。Class 引用 指向当前方法在运行时常量池中对应的 Class
