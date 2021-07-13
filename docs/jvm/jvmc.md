@@ -10,3 +10,12 @@ java -XX:+UseConcMarkSweepGC  -Xms512m -Xmx512m  -Xloggc:gc.demo.log  -XX:+Print
 
 java -XX:+UseG1GC -Xms512m -Xmx512m  --XX:+PrintGC  -XX:+PrintGCDateStamps GCLogAnalysis
 
+
+
+1.查看当前gc
+
+jps -lvm
+
+jmap -heap
+
+1H50Min

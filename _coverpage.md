@@ -3,9 +3,9 @@
 </p>
 <h1 align="center">docsify-demo</h1>
 
-[常用资源](#)
-[GitHub](https://github.com/codingxin/lerning-note)
-[开始阅读](#docsify-demo)
+[常用资源](https://github.com/codingxin)
+[GitHub](https://github.com/codingxin/learing-note)
+[开始阅读](#莫小凡的学习笔记)
 
 
 
