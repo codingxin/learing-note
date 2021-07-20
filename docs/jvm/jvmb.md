@@ -38,8 +38,8 @@
 注： 当没有发生minor gc时，s0和s1只有一块会分配内存
 
 **永久代**
-> 在新生代中经历了多次（具体看虚拟机配置的阀值，默认15）GC后仍然存活下来的对象会进入老年代中。老年代中的对象生命周期较长，存活率比较高，在老年代中进行GC的频率相对而言较低，而且回收的速度也比较慢。
 
+> 在新生代中经历了多次（具体看虚拟机配置的阀值，默认15）GC后仍然存活下来的对象会进入老年代中。老年代中的对象生命周期较长，存活率比较高，在老年代中进行GC的频率相对而言较低，而且回收的速度也比较慢。
 
 **堆异常**
 
@@ -86,104 +86,120 @@
 **常见启动参数**
  标色代表常用
 
--`Xmx`, 指定最大堆内存。 如 -Xmx4g. 这只是限制了 Heap 部分的最大值为4g。
-这个内存不包括栈内存，也不包括堆外使用的内存。
+> -`Xmx`, 指定最大堆内存。 如 -Xmx4g. 这只是限制了 Heap 部分的最大值为4g。
+> 这个内存不包括栈内存，也不包括堆外使用的内存。
 
--`Xms`, 指定堆内存空间的初始大小。 如 -Xms4g。 而且指定的内存大小，并
-不是操作系统实际分配的初始值，而是GC先规划好，用到才分配。 专用服务
-器上需要保持 –Xms 和 –Xmx 一致，否则应用刚启动可能就有好几个 FullGC。
-当两者配置不一致时，堆内存扩容可能会导致性能抖动
+> -`Xms`, 指定堆内存空间的初始大小。 如 -Xms4g。 而且指定的内存大小，并
+> 不是操作系统实际分配的初始值，而是GC先规划好，用到才分配。 专用服务
+> 器上需要保持 –Xms 和 –Xmx 一致，否则应用刚启动可能就有好几个 FullGC。
+> 当两者配置不一致时，堆内存扩容可能会导致性能抖动
 
--Xmn, 等价于 -XX:NewSize，使用 G1 垃圾收集器不应该设置该选项，在其
-他的某些业务场景下可以设置。官方建议设置为 -Xmx 的 1/2 ~ 1/4.
+> -Xmn, 等价于 -XX:NewSize，使用 G1 垃圾收集器不应该设置该选项，在其
+> 他的某些业务场景下可以设置。官方建议设置为 -Xmx 的 1/2 ~ 1/4.
 
--`XX：MaxPermSize=size`, 这是 JDK1.7 之前使用的。Java8 默认允许的
-Meta空间无限大，此参数无效。
+> -`XX：MaxPermSize=size`, 这是 JDK1.7 之前使用的。Java8 默认允许的
+> Meta空间无限大，此参数无效。
 
--`XX：MaxMetaspaceSize=size`, Java8 默认不限制 Meta 空间, 一般不允许设
-置该选项。
+> -`XX：MaxMetaspaceSize=size`, Java8 默认不限制 Meta 空间, 一般不允许设
+> 置该选项。
 
--XX：MaxDirectMemorySize=size，系统可以使用的最大堆外内存，这个参
-数跟 -Dsun.nio.MaxDirectMemorySize 效果相同。
+> -XX：MaxDirectMemorySize=size，系统可以使用的最大堆外内存，这个参
+> 数跟 -Dsun.nio.MaxDirectMemorySize 效果相同。
 
--`Xss, 设置每个线程栈的字节数`。 例如 -Xss1m 指定线程栈为 1MB，与-
-XX:ThreadStackSize=1m 等价
+> -`Xss, 设置每个线程栈的字节数`。 例如 -Xss1m 指定线程栈为 1MB，与-
+> XX:ThreadStackSize=1m 等价
 
--`XX：+UseG1GC`：使用 G1 垃圾回收器
+> -`XX：+UseG1GC`：使用 G1 垃圾回收器
 
--`XX：+UseConcMarkSweepGC`：使用 CMS 垃圾回收器
+> -`XX：+UseConcMarkSweepGC`：使用 CMS 垃圾回收器
 
--`XX：+UseSerialGC`：使用串行垃圾回收器
+> -`XX：+UseSerialGC`：使用串行垃圾回收器
 
-> 串行 GC 对年轻代使用 mark-copy（标记-复制） 算法，对老年代使用 mark-sweep-compact
+串行 GC 对年轻代使用 mark-copy（标记-复制） 算法，对老年代使用 mark-sweep-compact
 （标记-清除-整理）算法。
 
-> 两者都是单线程的垃圾收集器，不能进行并行处理，所以都会触发全线暂停（STW），停止所
+两者都是单线程的垃圾收集器，不能进行并行处理，所以都会触发全线暂停（STW），停止所
 有的应用线程。
 
-> 因此这种 GC 算法不能充分利用多核 CPU。不管有多少 CPU 内核，JVM 在垃圾收集时都只能使
+因此这种 GC 算法不能充分利用多核 CPU。不管有多少 CPU 内核，JVM 在垃圾收集时都只能使
 用单个核心。
 
-> CPU 利用率高，暂停时间长。简单粗暴，就像老式的电脑，动不动就卡死。
+CPU 利用率高，暂停时间长。简单粗暴，就像老式的电脑，动不动就卡死。
 该选项只适合几百 MB 堆内存的 JVM，而且是单核 CPU 时比较有用。
 
+> -`XX：+UseParallelGC`：使用并行垃圾回收器
 
--`XX：+UseParallelGC`：使用并行垃圾回收器
-
--XX：+USeParNewGC 改进版本的 Serial GC，可以配合 CMS 使用。
--XX：+UseParallelGC
--XX：+UseParallelOldGC
--XX：+UseParallelGC -XX:+UseParallelOldGC
+> -XX：+USeParNewGC 改进版本的 Serial GC，可以配合 CMS 使用。
+> -XX：+UseParallelGC
+> -XX：+UseParallelOldGC
+> -XX：+UseParallelGC -XX:+UseParallelOldGC
 
 • 年轻代和老年代的垃圾回收都会触发 STW 事件
 
 • 在年轻代使用 标记-复制（mark-copy）算法，在老年代使用 标记-清除-整理（mark-sweepcompact）算法。
 
--XX：ParallelGCThreads=N 来指定 GC 线程数， 其默认值为 CPU 核心数。
+> -XX：ParallelGCThreads=N 来指定 GC 线程数， 其默认值为 CPU 核心数。
 
 并行垃圾收集器适用于多核服务器，主要目标是增加吞吐量。因为对系统资源的有效使用，能达到
 更高的吞吐量
 
-• 在 GC 期间，所有 CPU 内核都在并行清理垃圾，所以总暂停时间更短；
+在 GC 期间，所有 CPU 内核都在并行清理垃圾，所以总暂停时间更短；
 
-• 在两次 GC 周期的间隔期，没有 GC 线程在运行，不会消耗任何系统资源
-
+在两次 GC 周期的间隔期，没有 GC 线程在运行，不会消耗任何系统资源
 
 
 
 // Java 11+
--`XX：+UnlockExperimentalVMOptions -XX:+UseZGC`    解锁实验参数，并使用zgc
+
+> -`XX：+UnlockExperimentalVMOptions -XX:+UseZGC`    解锁实验参数，并使用zgc
 
 // Java 12+
--`XX：+UnlockExperimentalVMOptions -XX:+UseShenandoahGC`   解锁实验参数，并使用ShenandoahGC
 
--`XX：+-HeapDumpOnOutOfMemoryError` 选项, 当 OutOfMemoryError 产生，即内存溢出(堆内存或持久代)时，
-自动 Dump 堆内存。
-示例用法： java -XX:+HeapDumpOnOutOfMemoryError -Xmx256m ConsumeHeap
+> -`XX：+UnlockExperimentalVMOptions -XX:+UseShenandoahGC`   解锁实验参数，并使用ShenandoahGC
 
--XX：HeapDumpPath 选项, 与 HeapDumpOnOutOfMemoryError 搭配使用, 指定内存溢出时 Dump 文件的目
-录。
-如果没有指定则默认为启动 Java 程序的工作目录。
-示例用法： java -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/usr/local/ ConsumeHeap 
-自动 Dump 的 hprof 文件会存储到 /usr/local/ 目录下。
+> -`XX：+-HeapDumpOnOutOfMemoryError` 选项, 当 OutOfMemoryError 产生，即内存溢出(堆内存或持久代)时，
+> 自动 Dump 堆内存。
+> 示例用法： java -XX:+HeapDumpOnOutOfMemoryError -Xmx256m ConsumeHeap
 
--XX：OnError 选项, 发生致命错误时（fatal error）执行的脚本。
-例如, 写一个脚本来记录出错时间, 执行一些命令, 或者 curl 一下某个在线报警的 url. 
-示例用法：java -XX:OnError="gdb - %p" MyApp 
-可以发现有一个 %p 的格式化字符串，表示进程 PID。 
+> -XX：HeapDumpPath 选项, 与 HeapDumpOnOutOfMemoryError 搭配使用, 指定内存溢出时 Dump 文件的目
+> 录。
+> 如果没有指定则默认为启动 Java 程序的工作目录。
+> 示例用法： java -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/usr/local/ ConsumeHeap 
+> 自动 Dump 的 hprof 文件会存储到 /usr/local/ 目录下。
 
--`XX：OnOutOfMemoryError` 选项, 抛出 OutOfMemoryError 错误时执行的脚本。
+> -XX：OnError 选项, 发生致命错误时（fatal error）执行的脚本。
+> 例如, 写一个脚本来记录出错时间, 执行一些命令, 或者 curl 一下某个在线报警的 url. 
+> 示例用法：java -XX:OnError="gdb - %p" MyApp 
+> 可以发现有一个 %p 的格式化字符串，表示进程 PID。 
 
--XX：ErrorFile=filename 选项, 致命错误的日志文件名,绝对路径或者相对路径。
+> -`XX：OnOutOfMemoryError` 选项, 抛出 OutOfMemoryError 错误时执行的脚本。
 
--`Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=1506`，远程调试
--`XX：+MaxTenuringThreshold=15` 对象在s0和s1中复制的周期
+> -XX：ErrorFile=filename 选项, 致命错误的日志文件名,绝对路径或者相对路径。
+
+> -`Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=1506`，远程调试
+> -`XX：+MaxTenuringThreshold=15` 对象在s0和s1中复制的周期
 
 推荐jvm参数自动生成网站： [perfma](https://opts.console.perfma.com/)
 
+> -`XX：+UseConcMarkSweepGC`
+>  cms gc.其对年轻代采用并行 STW 方式的 mark-copy (标记-复制)算法，对老年代主要使用并发 marksweep (标记-清除)算法。
 
--`XX：+UseConcMarkSweepGC`
- cms gc.其对年轻代采用并行 STW 方式的 mark-copy (标记-复制)算法，对老年代主要使用并发 marksweep (标记-清除)算法。
+元空间
+
+```text
+XX:MetaspaceSize
+    class metadata的初始空间配额，以bytes为单位，达到该值就会触发垃圾收集进行类型卸载，
+    同时GC会对该值进行调整：如果释放了大量的空间，就适当的降低该值；如果释放了很少的空间，
+    那么在不超过MaxMetaspaceSize（如果设置了的话），适当的提高该值。
+-XX：MaxMetaspaceSize
+    可以为class metadata分配的最大空间。默认是没有限制的。
+-XX：MinMetaspaceFreeRatio
+    在GC之后，最小的Metaspace剩余空间容量的百分比，减少为class metadata分配空间导致的垃圾收集。
+-XX:MaxMetaspaceFreeRatio
+    在GC之后，最大的Metaspace剩余空间容量的百分比，减少为class metadata释放空间导致的垃圾收集。
+```
+
+
 
 
 
