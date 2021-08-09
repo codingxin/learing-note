@@ -9,6 +9,64 @@
 
 ### 1.1 基本概念介绍
 
+**Netty介绍**
+
+网络应用开发框架
+
+> 异步
+ 
+> 事件驱动
+
+> 基于NIO
+
+适用于
+> 服务端
+> 客户端
+> TCP/UDP
+
+
+**Netty支持三种模式**
+
+>1. Reactor单线程模型: Reactor单线程模型，指的是所有的I/O操作都在同一个NIO线程上面完成，NIO线程的职责如下：
+
+- 作为NIO服务端，接收客户端的TCP连接；
+
+- 作为NIO客户端，向服务端发起TCP连接；
+
+- 读取通信对端的请求或者应答消息；
+
+- 向通信对端发送消息请求或者应答消息；
+
+
+>2. Reactor多线程模型: 一组NIO线程处理I/O操作
+
+
+>3. 主从Reactor多线程模式 
+
+- 特点是：服务端用于接收客户端连接的不再是1个单独的NIO线程，而是一个独立的NIO线程池。Acceptor接收到客户端TCP连接请求处理完成后（可能包含接入认证等），将新创建的SocketChannel注册到I/O线程池（sub reactor线程池）的某个I/O线程上，由它负责SocketChannel的读写和编解码工作。
+
+
+
+
+
+
+**常见组件**
+
+> Bootstrap: 启动线程，开启 socket
+
+> EventLoopGroup
+
+> EventLoop
+
+> SocketChannel: 连接
+
+> ChannelInitializer: 初始化
+
+> ChannelPipeline: 处理器链
+
+> ChannelHandler: 处理器
+
+
 > channel
 
 通道，Java NIO 中的基础概念,代表一个打开的连接,可执行读取/写入 IO 操作。
@@ -108,6 +166,8 @@ ServerBootstrap  对象
 
 > ```
 > ChannelOption.SO_RCVBUF
+> 定义接收或者传输的系统缓冲区buf的大小，
+> 
 > ```
 
 >```
@@ -124,12 +184,38 @@ ServerBootstrap  对象
 
 > ```
 > ChannelOption.ALLOCATOR
+> Netty4使用对象池，重用缓冲区
+> bootstrap.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+> bootstrap.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
 > ```
 
 
 
-
+*HttpRequest.Filter* 属性为我们提供了一个过滤和转换器，可以在进行页面处理之前对 *Http* 输入流数据进行更改
 
 
 
 ### 1.3 netty进阶
+
+
+
+**Netty优化**
+
+1、不要阻塞 EventLoop
+
+2、系统参数优化
+ulimit -a /proc/sys/net/ipv4/tcp_fin_timeout, TcpTimedWaitDelay
+
+3、缓冲区优化
+SO_RCVBUF/SO_SNDBUF/SO_BACKLOG/ REUSEXXX
+
+4、心跳周期优化
+心跳机制与短线重连
+
+5、内存与 ByteBuffer 优化
+DirectBuffer与HeapBuffer
+
+6、其他优化
+- ioRatio
+- Watermark
+- TrafficShaping
