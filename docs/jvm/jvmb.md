@@ -265,7 +265,8 @@ XX:MetaspaceSize
 - jmap  -histo pid | sort -n -r -k 2 | head -10     
 
 - jmap  -histo pid | sort -n -r -k 2 | head -10
-
+- 
+- jmap -dump:format=b,file=a.dmp pid  导出map快照，并使用可视化工具mat分析
 
 ![jmap使用](https://user-images.githubusercontent.com/24818340/124375568-8015f700-dcd5-11eb-9c2d-3a7458ccd3a1.png)
 
@@ -288,9 +289,27 @@ GB或更多的物理内存，则默认的最大堆大小最大为32 GB。
 
 查看线程信息
 
-- 1
-- 2
-- 3
+> locked <0x0000000XXXX>说明线程 对地址为0x0000000XXXX对象进行了加锁；
+
+> waiting to lock <0x0000000XXXX>说明线程 在等待0x0000000XXXX对象释放锁；
+
+> waiting for monitor entry [0x0000000XXXX]说明线程 是通过synchronized关键字进入了监视器的临界区，并处于"Entry Set"队列，等待monitor；
+
+> waiting on <0x0000000XXXX> (a java.lang.Object)等待锁的释放
+
+查看是否有多个线程在等待同一把锁
+
+runnable：运行中状态，在虚拟机内部执行，可能已经获取到了锁，可以观察是否有locked字样
+
+blocked：被阻塞并等待锁的释放
+
+wating：处于等待状态，等待特定的操作被唤醒，一般停留在park(), wait(), sleep(),join() 等语句里
+
+time_wating：有时限的等待另一个线程的特定操作
+
+terminated：线程已经退出。
+
+
 
 ![jstack使用](https://user-images.githubusercontent.com/24818340/124375565-7e4c3380-dcd5-11eb-9513-f100c543120c.png)
 
