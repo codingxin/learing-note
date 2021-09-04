@@ -56,9 +56,9 @@
 
 - iconst  定义变量
 
-- istore   存储在局部变量去
+- istore   存储在局部变量区
 
-- iload   加载到求职栈
+- iload   加载到求值栈
 
 - if_icmpge  if判断
 

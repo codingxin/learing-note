@@ -3,7 +3,7 @@
 ##  1.1  jvm基础(./docs/jvm/jvma.md)
 ##  1.2  jvm进阶(./docs/jvm/jvmb.md)
 ##  1.3  jvm其他(./docs/jvm/jvmc.md)
-##  1.4  读书笔记(./docs/jvm/jvmd.md)
+
 # 2.io
 
 ##  2.1  io(./docs/io/ioa.md)
@@ -12,3 +12,6 @@
 # 3.Juc
 
 ##  3.1  threadPool(./docs/juc/threada.md)
+
+# 4.mysql
+##  4.1 mysql
